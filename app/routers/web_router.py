@@ -26,6 +26,14 @@ def home(request: Request , sesion : Annotated[Session , Depends(get_db)] ):
             "lista_fichajes" : get_fichajes_service(sesion , None)
         }
     )
+
+@router.get("/home" , response_class=HTMLResponse)
+def home_sistema(request: Request , sesion : Annotated[Session , Depends(get_db)] ):
+    return templates.TemplateResponse(request=request,name="home.html",
+        context={
+            "lista_fichajes" : get_fichajes_service(sesion , None)
+        }
+    )
 @router.post("/nuevo_fichaje" , response_class=HTMLResponse )
 def nuevo_fichaje( request : Request,sesion : Annotated[Session , Depends(get_db)] , fichaje : Annotated[PostFichajes , Form()]):
     fecha_hora = datetime.now()
