@@ -16,3 +16,11 @@ def post_usuario_repository(sesion : Session , usuario , contrasena_hasheada):
     sesion.commit()
     sesion.refresh(nuevo_usuario)
     return nuevo_usuario
+
+
+def post_usuario_empleado_repository(sesion : Session , usuario , contrasena_hasheada , id_empleado):
+    nuevo_usuario = UsuariosORM(usuario = usuario , contrasena_hasheada = contrasena_hasheada , id_empleado = id_empleado)
+    sesion.add(nuevo_usuario)
+    sesion.commit()
+    sesion.refresh(nuevo_usuario)
+    return nuevo_usuario
