@@ -54,6 +54,7 @@
       <th scope="col">ID EMPLEADO</th>
       <th scope="col">NOMBRE </th>
       <th scope="col">PUESTO</th>
+      <th scope="col">USUARIO</th>
     </tr>
   </thead>
   <tbody>
@@ -62,6 +63,7 @@
       <td>{{empleado.id}}</td>
       <td>{{empleado.nombre|title}}</td>
       <td>{{empleado.nombre_puesto|title}}</td>
+      <td>{% if empleado.usuario %}{{empleado.usuario.usuario}}{% else %}Sin usuario{% endif %}</td>
     
     </tr>
     {%endfor%} 
