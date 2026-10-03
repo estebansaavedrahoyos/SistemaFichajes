@@ -35,7 +35,9 @@
 <div class="container">
     <div class="d-flex justify-content-center gap-2 mt-4">
         <a href="/fichajes" class="btn btn-outline-light" >FICHAJES</a>
+        {% if usuario and usuario.empleado.admin %}
         <a href="/empleados" class="btn btn-outline-light">EMPLEADOS</a>
+        {% endif %}
         <a href="/puestos" class="btn btn-outline-light">PUESTOS</a>
         <a href="/motivos" class="btn btn-outline-light">MOTIVOS</a>
         
