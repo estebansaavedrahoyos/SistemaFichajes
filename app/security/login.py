@@ -1,9 +1,14 @@
 from passlib.context import CryptContext
 
-contexto_hash = CryptContext(schemes=["bcrypt"],
-                              deprecated="auto")
-def hash_contrasena(contrasena : str ) -> str:
-    return hash_contrasena.hash(contrasena)
+contexto_hash = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
 
-def comprobar_contrasena(contrasena , hashed_contrasena):
-    return contexto_hash.verify(contrasena , hashed_contrasena)
+
+def hash_contrasena(contrasena: str) -> str:
+    return contexto_hash.hash(contrasena)
+
+
+def comprobar_contrasena(contrasena: str, contrasena_hasheada: str) -> bool:
+    return contexto_hash.verify(contrasena, contrasena_hasheada)
