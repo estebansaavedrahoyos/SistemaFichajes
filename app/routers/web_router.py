@@ -10,8 +10,8 @@ from app.services.fichaje_service import get_fichajes_service , post_fichajes_se
 from app.services.empleado_service import get_empleado_service , post_empleado_service , delete_empleado_service
 from app.services.puesto_service import get_puestos_service , post_puesto_service , delete_puesto_service
 from app.services.motivo_service import get_motivo_service , post_motivo_service , delete_motivo_service
+from app.services.login_service import comprobar_login_service
 from app.database.db import Session , get_db
-from app.security.login import hash_contrasena , comprobar_contrasena
 from typing import Annotated , Literal
 
 router = APIRouter(tags=["Frontend"])
@@ -190,11 +190,18 @@ def delete_puestos(request : Request , sesion : Annotated[ Session , Depends(get
                                       })   
         
 @router.post("/login" , response_class=HTMLResponse)
-def comprobar_login(usuario , contrasena):
-    
-    
-    
-        
-    
-        
-    
+def comprobar_login(request : Request , sesion : Annotated[Session , Depends(get_db)] ,
+                    usuario : Annotated[str , Form()] , contrasena : Annotated[str , Form()]):
+    resultado_login = comprobar_login_service(sesion , usuario , contrasena)
+    if resultado_login["ok"] == False:
+        return templates.TemplateResponse(request=request , name="login.html",
+                                          context={
+                                              "info" : resultado_login["detail"] ,
+                                              "lista_fichajes" : get_fichajes_service(sesion , None)
+                                          })
+    else:
+        return templates.TemplateResponse(request=request , name="home.html",
+                                          context={
+                                              "usuario" : resultado_login["usuario"] ,
+                                              "lista_fichajes" : get_fichajes_service(sesion , None)
+                                          })
