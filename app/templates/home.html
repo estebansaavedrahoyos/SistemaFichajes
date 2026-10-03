@@ -7,12 +7,12 @@
 
         <div class="col-md-6">
             <label class="form-label fw-bold">Empleado</label>
-            <input type="text" class="form-control" placeholder="Nombre  (Obligatorio)" name="usuario" required>
+            <input type="text" class="form-control" value="{% if usuario %}{{usuario.empleado.nombre|title}}{% else %}Sin usuario activo{% endif %}" disabled>
         </div>
 
         <div class="col-md-6">
             <label class="form-label fw-bold">Motivo</label>
-            <input type="text" class="form-control" name="contrasena" placeholder="Motivo  (Si no es fichaje)">
+            <input type="text" class="form-control" name="motivo" placeholder="Motivo  (Si no es fichaje)">
         </div>
     </div>
     <div class="mt-3">
