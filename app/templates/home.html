@@ -1,0 +1,70 @@
+{%extends "base.html"%}
+
+{% block contenido %}
+<form method="post" action="/nuevo_fichaje">
+<div class="mx-auto mt-4" style="max-width: 900px;">
+    <div class="row g-3">
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Empleado</label>
+            <input type="text" class="form-control" placeholder="Nombre  (Obligatorio)" name="usuario" required>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Motivo</label>
+            <input type="text" class="form-control" name="contrasena" placeholder="Motivo  (Si no es fichaje)">
+        </div>
+    </div>
+    <div class="mt-3">
+    <div class="d-grid mx-auto align-content-md-center" style="width: 910px;">
+        <button type="submit" class="btn btn-outline-primary" >FICHAR</button>
+    </div>
+</div>  
+</form>  
+
+
+    </div>
+    
+
+
+
+
+</div> 
+
+ 
+<div class="container">
+    <div class="d-flex justify-content-center gap-2 mt-4">
+        <a href="/fichajes" class="btn btn-outline-light" >FICHAJES</a>
+        <a href="/empleados" class="btn btn-outline-light">EMPLEADOS</a>
+        <a href="/puestos" class="btn btn-outline-light">PUESTOS</a>
+        <a href="/motivos" class="btn btn-outline-light">MOTIVOS</a>
+        
+    </div>
+</div>
+<h2 class="text-center mt-5 mb-3 display-6">ULTIMOS FICHAJES</h2>
+<div>
+    <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">EMPLEADO</th>
+      <th scope="col">FECHA | HORA</th>
+      <th scope="col">PUESTO</th>
+      <th scope="col">MOTIVO</th>
+      <th scope="col">TIPO</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for fichaje in lista_fichajes%}
+    <tr class="{{loop.cycle("table-secondary" , "table-default")}}">
+      <td>{{fichaje.nombre_empleado|title}}</td>
+      <td>{{fichaje.fecha_hora_str|title}}</td>
+      <td>{{fichaje.puesto_empleado|title}}</td>
+      <td>{{fichaje.nombre_motivo|title}}</td>
+      <td>{{fichaje.tipo|title}}</td>
+    </tr>
+    {%endfor%} 
+  </tbody>
+</table>
+</div>
+{% endblock contenido %}
+
