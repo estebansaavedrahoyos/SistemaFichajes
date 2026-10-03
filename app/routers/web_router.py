@@ -52,8 +52,19 @@ def logout():
     return RedirectResponse(url="/" , status_code=303)
 
 @router.post("/nuevo_fichaje" , response_class=HTMLResponse )
-def nuevo_fichaje( request : Request,sesion : Annotated[Session , Depends(get_db)] , fichaje : Annotated[PostFichajes , Form()]):
+def nuevo_fichaje( request : Request,sesion : Annotated[Session , Depends(get_db)] ,
+                  motivo : Annotated[str | None , Form() , BeforeValidator(str_vacio_a_None) , BeforeValidator(limpiar_texto)] = "fichaje"):
     fecha_hora = datetime.now()
+    usuario_activo = get_usuario_activo()
+    if usuario_activo is None:
+        return templates.TemplateResponse(request=request,name="login.html",
+            context={
+                "info" : "Debe iniciar sesion para fichar" ,
+                "lista_fichajes" : get_fichajes_service(sesion , None)
+            })
+    if motivo is None:
+        motivo = "fichaje"
+    fichaje = PostFichajes(nombre_empleado = usuario_activo.empleado.nombre , motivo = motivo)
     diccionario_respuesta = {"lista_fichajes" : get_empleado_service(sesion , filtros=None)}
     post_fichaje = post_fichajes_service(sesion ,fichaje,fecha_hora)
     if "detail" in post_fichaje:
