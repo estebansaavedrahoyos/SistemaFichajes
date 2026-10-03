@@ -39,6 +39,8 @@ class RespuestaFichajes(BaseModel):
 class PostEmpleado(BaseModel):
     nombre : Annotated[str , BeforeValidator(limpiar_texto)]
     puesto : Annotated[str  , BeforeValidator(limpiar_texto)]
+    usuario : Annotated[str | None , BeforeValidator(limpiar_texto)] = None
+    contrasena : str | None = None
     
    
     
