@@ -19,6 +19,16 @@ router = APIRouter(tags=["Frontend"])
 templates = Jinja2Templates(directory="app/templates")
 
 
+def get_usuario_activo():
+    import app.main as main_app
+    return main_app.usuario_activo
+
+
+def set_usuario_activo(usuario):
+    import app.main as main_app
+    main_app.usuario_activo = usuario
+
+
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request , sesion : Annotated[Session , Depends(get_db)] ):
     return templates.TemplateResponse(request=request,name="login.html",
@@ -31,9 +41,16 @@ def home(request: Request , sesion : Annotated[Session , Depends(get_db)] ):
 def home_sistema(request: Request , sesion : Annotated[Session , Depends(get_db)] ):
     return templates.TemplateResponse(request=request,name="home.html",
         context={
+            "usuario" : get_usuario_activo() ,
             "lista_fichajes" : get_fichajes_service(sesion , None)
         }
     )
+
+@router.get("/logout")
+def logout():
+    set_usuario_activo(None)
+    return RedirectResponse(url="/" , status_code=303)
+
 @router.post("/nuevo_fichaje" , response_class=HTMLResponse )
 def nuevo_fichaje( request : Request,sesion : Annotated[Session , Depends(get_db)] , fichaje : Annotated[PostFichajes , Form()]):
     fecha_hora = datetime.now()
@@ -43,6 +60,7 @@ def nuevo_fichaje( request : Request,sesion : Annotated[Session , Depends(get_db
             diccionario_respuesta["info"] = post_fichaje["detail"]
     return templates.TemplateResponse(request=request,name="home.html",
         context={
+            "usuario" : get_usuario_activo() ,
             "lista_fichajes" : get_fichajes_service(sesion , None)
         })
 
@@ -202,14 +220,16 @@ def comprobar_login(request : Request , sesion : Annotated[Session , Depends(get
                     usuario : Annotated[str , Form()] , contrasena : Annotated[str , Form()]):
     resultado_login = comprobar_login_service(sesion , usuario , contrasena)
     if resultado_login["ok"] == False:
+        set_usuario_activo(None)
         return templates.TemplateResponse(request=request , name="login.html",
                                           context={
                                               "info" : resultado_login["detail"] ,
                                               "lista_fichajes" : get_fichajes_service(sesion , None)
                                           })
     else:
+        set_usuario_activo(resultado_login["usuario"])
         return templates.TemplateResponse(request=request , name="home.html",
                                           context={
-                                              "usuario" : resultado_login["usuario"] ,
+                                              "usuario" : get_usuario_activo() ,
                                               "lista_fichajes" : get_fichajes_service(sesion , None)
                                           })
