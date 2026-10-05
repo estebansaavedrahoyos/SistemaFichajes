@@ -63,6 +63,10 @@ def delete_empleado_service(sesion : Session , nombre : str , puesto : str):
             return {"detail" : "Empleado eliminado con exito "}
         elif verificar_existencia_empleado_service(sesion , nombre , puesto) == False:
             return {"detail":f"No se ha encontrado el empleado '{nombre}' con puesto '{puesto}'"}
+
+    except ValueError as e:
+        return {"detail" : str(e)}
+
     except SQLAlchemyError as e:
         print("<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<",e)
         return {"detail":"Fallo en la base de datos , intentelo mas tarde"}
