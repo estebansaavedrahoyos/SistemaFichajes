@@ -83,7 +83,7 @@ class UsuariosORM(Base):
     id : Mapped[int] =  mapped_column(Integer , primary_key=True , autoincrement=True , nullable = False , index=True)
     usuario : Mapped[str] = mapped_column(String , nullable=False , index = True)
     contrasena_hasheada : Mapped[str] = mapped_column(String , nullable=False )
-    id_empleado : Mapped[int] = mapped_column(Integer , ForeignKey("Empleados.id" , ondelete="CASCADE") ,nullable=False , index=True )
+    id_empleado : Mapped[int] = mapped_column(Integer , ForeignKey("Empleados.id" , ondelete="CASCADE") ,nullable=True , index=True )
     
     empleado : Mapped["EmpleadosORM"] = relationship(back_populates="usuario")
     
