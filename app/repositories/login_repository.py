@@ -1,6 +1,6 @@
 from app.database.db import Session
 from sqlalchemy import select
-from app.models.models import UsuariosORM , EmpleadosORM
+from app.models.models import UsuariosORM , EmpleadosORM , PuestosORM
 
 
 def get_usuario_repository(sesion : Session , usuario):
@@ -8,7 +8,8 @@ def get_usuario_repository(sesion : Session , usuario):
 
 
 def post_usuario_repository(sesion : Session , usuario , contrasena_hasheada):
-    empleado = EmpleadosORM(nombre = usuario , admin = True)
+    id_puesto_admin = sesion.scalar(select(PuestosORM.id).where(PuestosORM.puesto == "admin"))
+    empleado = EmpleadosORM(nombre = usuario , id_puesto = id_puesto_admin , admin = True)
     sesion.add(empleado)
     sesion.flush()
     nuevo_usuario = UsuariosORM(usuario = usuario , contrasena_hasheada = contrasena_hasheada , id_empleado = empleado.id)
