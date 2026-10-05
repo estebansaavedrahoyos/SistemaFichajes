@@ -41,6 +41,7 @@ class PostEmpleado(BaseModel):
     puesto : Annotated[str  , BeforeValidator(limpiar_texto)]
     usuario : Annotated[str | None , BeforeValidator(limpiar_texto)] = None
     contrasena : str | None = None
+    admin : bool = False
     
    
     
