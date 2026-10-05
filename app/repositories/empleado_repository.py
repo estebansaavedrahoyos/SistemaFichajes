@@ -14,8 +14,8 @@ def get_empleado_db(sesion : Session , filtros : List | None = None):
     
 #REPOSITORIOS POST#
 
-def post_empleado_db(sesion : Session  , nombre_empleado : str , id_puesto : int):
-    nuevo_empleado = EmpleadosORM(nombre = nombre_empleado , id_puesto = id_puesto , admin = False)
+def post_empleado_db(sesion : Session  , nombre_empleado : str , id_puesto : int , admin : bool = False):
+    nuevo_empleado = EmpleadosORM(nombre = nombre_empleado , id_puesto = id_puesto , admin = admin)
     try: 
         sesion.add(nuevo_empleado)
         sesion.commit()
