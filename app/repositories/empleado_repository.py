@@ -31,10 +31,28 @@ def post_empleado_db(sesion : Session  , nombre_empleado : str , id_puesto : int
 
 def delete_empleado_db(sesion : Session , nombre : str , puesto : str):
     try:
-        stmt = sesion.scalar(select(EmpleadosORM).join(PuestosORM , PuestosORM.id == EmpleadosORM.id_puesto).where(EmpleadosORM.nombre == nombre , PuestosORM.puesto == puesto))
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<",stmt)
-        sesion.delete(sesion.scalar(select(EmpleadosORM).join(PuestosORM , PuestosORM.id == EmpleadosORM.id_puesto).where(EmpleadosORM.nombre == nombre , PuestosORM.puesto == puesto)))
+        empleado = sesion.scalar(
+            select(EmpleadosORM)
+            .join(PuestosORM , PuestosORM.id == EmpleadosORM.id_puesto)
+            .where(
+                EmpleadosORM.nombre == nombre ,
+                PuestosORM.puesto == puesto
+            )
+        )
+
+        if empleado is None:
+            return
+
+        if empleado.admin == True:
+            raise ValueError("No se puede eliminar un empleado administrador")
+
+        if empleado.usuario:
+            sesion.delete(empleado.usuario)
+            sesion.flush()
+
+        sesion.delete(empleado)
         sesion.commit()
+
     except SQLAlchemyError:
         sesion.rollback()
         raise
@@ -44,7 +62,15 @@ def delete_empleado_db(sesion : Session , nombre : str , puesto : str):
 
 def verificar_existencia_empleado_db(sesion : Session , nombre : str , puesto : str | None = None):
     if puesto:
-        return sesion.scalar(select(exists().where(EmpleadosORM.nombre == nombre )))
+        return sesion.scalar(
+            select(
+                exists().where(
+                    EmpleadosORM.nombre == nombre ,
+                    EmpleadosORM.id_puesto == PuestosORM.id ,
+                    PuestosORM.puesto == puesto
+                )
+            )
+        )
     elif puesto is None:
         return sesion.scalar(select(exists().where(EmpleadosORM.nombre == nombre )))
     
