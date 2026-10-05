@@ -38,7 +38,7 @@ def post_empleado_service(sesion : Session  , empleado : PostEmpleado):
         elif verificar_existencia_empleado_db(sesion , empleado.nombre ) == False:
             if verificar_existencia_puesto_db(sesion , empleado.puesto) == True:
                 id_puesto = id_puesto_desde_puesto(sesion , empleado.puesto)
-                empleado_db = post_empleado_db(sesion , nombre_empleado=empleado.nombre , id_puesto = id_puesto)
+                empleado_db = post_empleado_db(sesion , nombre_empleado=empleado.nombre , id_puesto = id_puesto , admin = empleado.admin)
                 if empleado.usuario is not None and empleado.contrasena is not None and empleado.usuario != "" and empleado.contrasena != "":
                     if get_usuario_repository(sesion , empleado.usuario) is None:
                         post_usuario_empleado_repository(sesion , empleado.usuario , hash_contrasena(empleado.contrasena) , empleado_db.id)
