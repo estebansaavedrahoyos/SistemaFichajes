@@ -1,6 +1,7 @@
 from app.database.db import Base , LocalSession , engine 
 from pydantic import BaseModel 
 from app.repositories.motivo_repository import conteo_motivos_db , post_motivo_db
+from app.repositories.puesto_repository import verificar_existencia_puesto_db , post_puesto_db
 from app.services.login_service import crear_primer_usuario_service
 from datetime import datetime
 
@@ -14,6 +15,14 @@ def crear_primer_motivo():
                 post_motivo_db(sesion = sesion , motivo = "fichaje")
             elif conteo_motivos_db(sesion) != 0:
                 pass
+
+def crear_primer_puesto_admin():
+    with LocalSession() as sesion :
+            if verificar_existencia_puesto_db(sesion , "admin") == False:
+                post_puesto_db(sesion = sesion , puesto = "admin")
+            elif verificar_existencia_puesto_db(sesion , "admin") == True:
+                pass
+
 
 def crear_primer_usuario():
     with LocalSession() as sesion :
