@@ -1,4 +1,4 @@
-from app.services.general_service import crear_db , crear_primer_motivo , crear_primer_usuario
+from app.services.general_service import crear_db , crear_primer_motivo , crear_primer_usuario , crear_primer_puesto_admin
 from fastapi import FastAPI 
 from app.routers.puesto_router import router as puestos_router
 from app.routers.motivo_router import router as motivos_router
@@ -11,6 +11,7 @@ app = FastAPI(title="Sistema de Fichajes")
 
 crear_db()
 crear_primer_motivo()
+crear_primer_puesto_admin()
 crear_primer_usuario()
 
 usuario_activo = None 
