@@ -33,19 +33,21 @@ def post_empleado_service(sesion : Session  , empleado : PostEmpleado):
     try:
         if len(empleado.nombre) < 2:
             return {"detail" : "El nombre del empleado debe de tener al menos dos caracteres"}
+        if empleado.usuario is None or empleado.usuario == "":
+            return {"detail" : "El usuario es obligatorio para crear un empleado"}
+        if empleado.contrasena is None or empleado.contrasena == "":
+            return {"detail" : "La contraseña es obligatoria para crear un empleado"}
         if verificar_existencia_empleado_db(sesion , empleado.nombre ) == True:
             return{"detail" : f"El empleado con nombre '{empleado.nombre}' ya existe"}
         elif verificar_existencia_empleado_db(sesion , empleado.nombre ) == False:
             if verificar_existencia_puesto_db(sesion , empleado.puesto) == True:
                 id_puesto = id_puesto_desde_puesto(sesion , empleado.puesto)
                 empleado_db = post_empleado_db(sesion , nombre_empleado=empleado.nombre , id_puesto = id_puesto , admin = empleado.admin)
-                if empleado.usuario is not None and empleado.contrasena is not None and empleado.usuario != "" and empleado.contrasena != "":
-                    if get_usuario_repository(sesion , empleado.usuario) is None:
-                        post_usuario_empleado_repository(sesion , empleado.usuario , hash_contrasena(empleado.contrasena) , empleado_db.id)
-                        return {"detail" : f"Empleado '{empleado.nombre}' con puesto '{empleado.puesto}' y usuario '{empleado.usuario}' , añadido con exito"}
-                    else:
-                        return {"detail" : f"Empleado creado pero el usuario '{empleado.usuario}' ya existe"}
-                return {"detail" : f"Empleado '{empleado.nombre}' con puesto '{empleado.puesto}' , añadido con exito"}
+                if get_usuario_repository(sesion , empleado.usuario) is None:
+                    post_usuario_empleado_repository(sesion , empleado.usuario , hash_contrasena(empleado.contrasena) , empleado_db.id)
+                    return {"detail" : f"Empleado '{empleado.nombre}' con puesto '{empleado.puesto}' y usuario '{empleado.usuario}' , añadido con exito"}
+                else:
+                    return {"detail" : f"Empleado creado pero el usuario '{empleado.usuario}' ya existe"}
             elif verificar_existencia_puesto_db(sesion , empleado.puesto) == False:
                 return {"detail":f"El puesto '{empleado.puesto}' no es un puesto valido"}
         
